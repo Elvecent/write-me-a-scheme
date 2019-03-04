@@ -10,10 +10,12 @@ import           Text.Megaparsec
 import           Text.Megaparsec.Char
 import qualified Text.Megaparsec.Char.Lexer as L
 
-data Sexp = Var String
-          | Lambda [String] Sexp
-          | App [Sexp]
-          | Quote Sexp
+data SExp = Var String
+          | Lambda [String] SExp
+          | App [SExp]
+          | Quote SExp
+          | NumLit Int
+          | StrLit String
           deriving Show
 
 type Parser = Parsec Void Text
@@ -38,21 +40,27 @@ flatList = parens . many . lexeme $ identifier
 parens :: Parser a -> Parser a
 parens = between (symbol "(") (symbol ")")
 
-topLevel :: Parser [Sexp]
+topLevel :: Parser [SExp]
 topLevel = many sparser <* eof
 
-sparser :: Parser Sexp
+sparser :: Parser SExp
 sparser = label "s-expression" $
-  choice [var, quote, try lambda, App <$> parens (some sparser)]
+  choice [literal, var, quote, try lambda, App <$> parens (some sparser)]
 
-var :: Parser Sexp
+literal :: Parser SExp
+literal = choice $ map (<* space) [strLit, numLit]
+  where
+    numLit = NumLit <$> L.signed (return ()) L.decimal
+    strLit = StrLit <$> (char '\"' *> manyTill L.charLiteral (char '\"'))
+
+var :: Parser SExp
 var = label "variable" $ do
   id <- lexeme identifier
   when (id == "lambda") $
     fail "Don't abuse the poor lambda!"
   return $ Var id
 
-lambda :: Parser Sexp
+lambda :: Parser SExp
 lambda = label "lambda" $ do
   space
   (args, body) <- parens $ do
@@ -62,5 +70,5 @@ lambda = label "lambda" $ do
     return (args, body)
   return $ Lambda args body
 
-quote :: Parser Sexp
+quote :: Parser SExp
 quote = Quote <$> (char '\'' *> sparser)
