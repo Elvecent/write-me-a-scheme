@@ -10,13 +10,7 @@ import           Text.Megaparsec
 import           Text.Megaparsec.Char
 import qualified Text.Megaparsec.Char.Lexer as L
 
-data SExp = Var String
-          | Lambda [String] SExp
-          | App [SExp]
-          | Quote SExp
-          | NumLit Int
-          | StrLit String
-          deriving Show
+import           Expressions                (SExp (..))
 
 type Parser = Parsec Void Text
 
