@@ -39,7 +39,7 @@ topLevel = many sparser <* eof
 
 sparser :: Parser SExp
 sparser = label "s-expression" $
-  choice [literal, var, quote, try lambda, App <$> parens (some sparser)]
+  choice [literal, var, quote, try define, try lambda, App <$> parens (some sparser)]
 
 literal :: Parser SExp
 literal = choice $ map (<* space) [strLit, numLit]
@@ -53,6 +53,16 @@ var = label "variable" $ do
   when (id == "lambda") $
     fail "Don't abuse the poor lambda!"
   return $ Var id
+
+define :: Parser SExp
+define = label "definition" $ do
+  space
+  (id, def) <- parens $ do
+    _ <- lexeme "define"
+    id <- identifier
+    def <- sparser
+    return (id, def)
+  return $ Define id def
 
 lambda :: Parser SExp
 lambda = label "lambda" $ do

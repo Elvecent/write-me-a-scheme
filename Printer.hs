@@ -14,6 +14,10 @@ instance Pretty SExp where
       [ sep ["lambda", parens . sep . fmap pretty $ vs]
       , pretty s
       ]
+    Define v d -> align . parens . nest 2 . vsep $
+      [ sep ["define", pretty v]
+      , pretty d
+      ]
     App ss -> parens . fillSep . fmap pretty $ ss
     Quote s -> fillCat ["\'", pretty s]
     NumLit n -> pretty n

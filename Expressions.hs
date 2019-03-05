@@ -6,4 +6,5 @@ data SExp = Var String
           | Quote SExp
           | NumLit Int
           | StrLit String
+          | Define String SExp
           deriving Show
