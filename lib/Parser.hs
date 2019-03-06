@@ -39,7 +39,7 @@ topLevel = many sparser <* eof
 
 sparser :: Parser SExp
 sparser = label "s-expression" $
-  choice [literal, var, quote, try define, try lambda, App <$> parens (some sparser)]
+  choice [literal, var, quote, try define, try lambda, App <$> parens (many sparser)]
 
 literal :: Parser SExp
 literal = choice $ map (<* space) [strLit, numLit]

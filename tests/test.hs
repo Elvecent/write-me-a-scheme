@@ -1,0 +1,1 @@
+main = putStrLn "Testing hard..."
