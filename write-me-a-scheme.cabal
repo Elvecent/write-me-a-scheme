@@ -46,3 +46,4 @@ test-suite test
                      , tasty-quickcheck
                      , validity
                      , genvalidity
+                     , write-me-a-scheme
