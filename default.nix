@@ -4,9 +4,9 @@ let
 
   inherit (nixpkgs) pkgs;
 
-  f = { mkDerivation, base, cabal-install, generic-random
+  f = { mkDerivation, base, cabal-install, genvalidity, validity
       , haskeline, megaparsec, prettyprinter, QuickCheck, stdenv
-      , stylish-haskell, tasty, text
+      , stylish-haskell, tasty, tasty-quickcheck, text
       }:
       mkDerivation {
         pname = "write-me-a-scheme";
@@ -15,8 +15,8 @@ let
         isLibrary = false;
         isExecutable = true;
         executableHaskellDepends = [
-          base generic-random haskeline megaparsec prettyprinter QuickCheck
-          tasty text
+          base haskeline megaparsec prettyprinter QuickCheck
+          tasty tasty-quickcheck text validity genvalidity
         ];
         executableSystemDepends = [ cabal-install stylish-haskell ];
         license = stdenv.lib.licenses.bsd3;
