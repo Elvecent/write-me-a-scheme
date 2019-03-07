@@ -41,9 +41,8 @@ test-suite test
   hs-source-dirs:      tests
   main-is:             test.hs
   build-depends:       base ^>=4.12.0.0
-                     , tasty
-                     , QuickCheck
-                     , tasty-quickcheck
                      , validity
                      , genvalidity
+                     , hspec
+                     , genvalidity-hspec
                      , write-me-a-scheme

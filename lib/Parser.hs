@@ -14,6 +14,12 @@ import           Expressions                (SExp (..))
 
 type Parser = Parsec Void Text
 
+parseSExp :: Text -> [SExp]
+parseSExp t = either
+  (error "Parse error")
+  id
+  (runParser topLevel "" t)
+
 mySpace = L.space
   space1
   (L.skipLineComment ";")

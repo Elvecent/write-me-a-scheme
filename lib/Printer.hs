@@ -5,6 +5,8 @@ module Printer where
 
 import Data.Text.Prettyprint.Doc
 import Data.Text.Prettyprint.Doc.Render.String
+import Data.List (intersperse)
+
 import Expressions
 
 instance Pretty SExp where
@@ -29,3 +31,6 @@ ppSExp = pretty >>>
   renderString
   where
     (>>>) = flip (.)
+
+ppSExps :: [SExp] -> String
+ppSExps = concat . intersperse "\n" . map ppSExp
